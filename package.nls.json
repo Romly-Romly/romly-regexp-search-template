@@ -1,0 +1,20 @@
+{
+	"templates-markdownDescription": "RegExp Templates which are shown when this command executed.",
+	"showLineNumber-markdownDescription": "Show line number at the first of each search results.",
+	"selectMatch-markdownDescription": "If it's set to `true`, select whole matched string after the jump.",
+	"descriptionLabel-markdownDescription": "**Depricated. This Value is no longer used.** Use `descriptionLabel2` instead.",
+	"descriptionLabel-enumDescriptions-none": "Show nothing.",
+	"descriptionLabel-enumDescriptions-lineNumbers": "Show line numbers.",
+	"descriptionLabel-enumDescriptions-wholeMatchedText": "Show whole matched text.",
+	"descriptionLabel-enumDescriptions-1": "Show capture text 1.",
+	"descriptionLabel-enumDescriptions-2": "Show capture text 2.",
+	"descriptionLabel-enumDescriptions-3": "Show capture text 3.",
+	"descriptionLabel-enumDescriptions-4": "Show capture text 4.",
+	"descriptionLabel-enumDescriptions-5": "Show capture text 5.",
+	"descriptionLabel-enumDescriptions-6": "Show capture text 6.",
+	"descriptionLabel-enumDescriptions-7": "Show capture text 7.",
+	"descriptionLabel-enumDescriptions-8": "Show capture text 8.",
+	"descriptionLabel-enumDescriptions-9": "Show capture text 9.",
+	"descriptionLabel2-markdownDescription": "Info displayed to search results description. You can use variables below:\n- `${lineNumber}`: Line number.\n- `\\${1}` - `\\${9}`: Captured texts.\n- `\\${<captured_name>}`: Named Captured texts. Replace `<captured_name>` with the actual captured name.",
+	"normalizeLineEndings-markdownDescription": "Before running the regular expression, line endings are unified to `\\n`. Specifically, the edtior text is replaced by `replace(/\\r\\n|\\r/g, '\\n')`. This makes it a bit easier to write regular expressions that match across multiple lines without considering `\\r`. **This setting was not presented in versions prior to 0.0.4, so if you were using an earlier version and your regular expressions that include line breaks no longer match correctly, try turning off this setting.**"
+}
