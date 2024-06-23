@@ -4,6 +4,10 @@
 	"description": "This extension gives you quick predefined regular expression search from the command palette. 予め定義しておいた正規表現検索をコマンドパレットから素早く実行できる拡張機能です。",
 	"version": "0.1.0",
 	"publisher": "Romly",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Romly-Romly/romly-regexp-search-template.git"
+	},
 	"engines": {
 		"vscode": "^1.90.0"
 	},
