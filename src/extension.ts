@@ -20,7 +20,6 @@ import default_templates from "./default_templates";
 
 
 const CONFIG_SECTION = 'Romly-RegexpSearchTemplate';
-const CONFIG_KEY_NORMALIZE_LINE_ENDINGS = 'normalizeLineEndings';
 const CONFIG_KEY_DESCRIPTION_LABEL = 'descriptionLabel2';
 const CONFIG_KEY_SHOW_LINENUMBER = 'showLineNumber';
 
@@ -221,12 +220,6 @@ function doRegExpAndShowResult(activeEditor: vscode.TextEditor, template: any)
 {
 	// アクティブなエディタの全テキストを取得
 	let text = activeEditor.document.getText();
-
-	// 設定改行を統一
-	if (vscode.workspace.getConfiguration(CONFIG_SECTION).get(CONFIG_KEY_NORMALIZE_LINE_ENDINGS))
-	{
-		text = text.replaceAll(/\r\n|\r/g, '\n');
-	}
 
 	// 設定を読み込む
 	const showLineNumber = vscode.workspace.getConfiguration(CONFIG_SECTION).get(CONFIG_KEY_SHOW_LINENUMBER);

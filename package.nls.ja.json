@@ -15,6 +15,5 @@
 	"descriptionLabel-enumDescriptions-7": "キャプチャ文字列7を表示する。",
 	"descriptionLabel-enumDescriptions-8": "キャプチャ文字列8を表示する。",
 	"descriptionLabel-enumDescriptions-9": "キャプチャ文字列9を表示する。",
-	"descriptionLabel2-markdownDescription": "検索結果の説明欄に表示される情報です。下記の変数を使えます。\n- `${lineNumber}`: 行番号。\n- `\\${1}` - `\\${9}`: キャプチャ文字列。\n- `\\${<captured_name>}`: 名前付きキャプチャの文字列。 `<captured_name>` を実際のキャプチャ名に書き換えて下さい。",
-	"normalizeLineEndings-markdownDescription": "正規表現を実行する前に、改行コードを`\\n`に統一します。具体的には、`replace(/\\r\\n|\\r/g, '\\n')`で置き換えます。`\\r`を考慮せずに良くなるので、複数の行にまたがってマッチする正規表現を書くのが少しだけ楽になります。 **version 0.0.4以前にはなかった処理なので、それ以前のバージョンから使っていた方で、改行を含む正規表現が正しくマッチされなくなった場合はこの設定のオフを試してみて下さい。**"
+	"descriptionLabel2-markdownDescription": "検索結果の説明欄に表示される情報です。下記の変数を使えます。\n- `${lineNumber}`: 行番号。\n- `\\${1}` - `\\${9}`: キャプチャ文字列。\n- `\\${<captured_name>}`: 名前付きキャプチャの文字列。 `<captured_name>` を実際のキャプチャ名に書き換えて下さい。"
 }

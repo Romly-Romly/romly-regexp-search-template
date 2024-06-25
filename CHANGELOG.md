@@ -4,6 +4,11 @@
 
 [English is here](#english英語)
 
+### [0.1.2] - 2024-06-26
+
+#### 削除
+- 検索前に改行コードを`\n`に統一する機能をオンにすると、ヒットした位置に正しくジャンプできていなかったため同機能を削除。
+
 ### [0.1.1] - 2024-06-25
 
 #### 修正
@@ -65,6 +70,11 @@
 ## English(英語)
 
 [日本語(Japanese)はこちら](#日本語japanese)
+
+### [0.1.2] - 2024-06-26
+
+#### Removed
+- Removed the feature that unifies line breaks to `\n` before searching, as it was causing issues with correctly jumping to the matched positions.
 
 ### [0.1.1] - 2024-06-25
 

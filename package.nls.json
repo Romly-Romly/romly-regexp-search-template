@@ -15,6 +15,5 @@
 	"descriptionLabel-enumDescriptions-7": "Show capture text 7.",
 	"descriptionLabel-enumDescriptions-8": "Show capture text 8.",
 	"descriptionLabel-enumDescriptions-9": "Show capture text 9.",
-	"descriptionLabel2-markdownDescription": "Info displayed to search results description. You can use variables below:\n- `${lineNumber}`: Line number.\n- `\\${1}` - `\\${9}`: Captured texts.\n- `\\${<captured_name>}`: Named Captured texts. Replace `<captured_name>` with the actual captured name.",
-	"normalizeLineEndings-markdownDescription": "Before running the regular expression, line endings are unified to `\\n`. Specifically, the edtior text is replaced by `replace(/\\r\\n|\\r/g, '\\n')`. This makes it a bit easier to write regular expressions that match across multiple lines without considering `\\r`. **This setting was not presented in versions prior to 0.0.4, so if you were using an earlier version and your regular expressions that include line breaks no longer match correctly, try turning off this setting.**"
+	"descriptionLabel2-markdownDescription": "Info displayed to search results description. You can use variables below:\n- `${lineNumber}`: Line number.\n- `\\${1}` - `\\${9}`: Captured texts.\n- `\\${<captured_name>}`: Named Captured texts. Replace `<captured_name>` with the actual captured name."
 }
