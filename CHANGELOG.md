@@ -4,6 +4,11 @@
 
 [English is here](#english英語)
 
+### [0.1.1] - 2024-06-25
+
+#### 修正
+- 表示言語がja/en以外の時にエラーになってしまっていた不具合を修正。
+
 ### [0.1.0] - 2024-06-21
 
 #### 追加
@@ -11,7 +16,7 @@
 - 検索結果の description に正規表現でキャプチャした値を表示できるようにした。伴って `descriptionLabel` 設定は廃止。
 - 検索前に改行コードを`\n`に統一する機能を追加した。
 
-#### 更新
+#### 変更
 - ディフォルトテンプレートを更新し、Pythonの関数の description にPydocのコメントが表示されるようにした。
 
 ### [0.0.4] - 2021-08-21
@@ -61,6 +66,11 @@
 
 [日本語(Japanese)はこちら](#日本語japanese)
 
+### [0.1.1] - 2024-06-25
+
+#### Fixed
+- Fixed an issue where an error occurred when the display language was set to anything other than ja/en.
+
 ### [0.1.0] - 2024-06-21
 
 #### Added
@@ -68,7 +78,7 @@
 - Supported displaying captured values in the search results' description using regular expressions. Consequently, the `descriptionLabel` setting has been removed.
 - Added a feature to unify line breaks to `\n` before execute the match.
 
-#### Updated
+#### Changed
 - Updated the default template to display Pydoc comments in the description of Python functions.
 
 ### [0.0.4] - 2021-08-21

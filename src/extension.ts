@@ -4,7 +4,8 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 
 // 自前の言語設定の読み込み
-import i18nText from "./i18n";
+import i18n from "./i18n";
+import i18nTexts from "./i18nTexts";
 
 // ディフォルトテンプレート
 import default_templates from "./default_templates";
@@ -277,7 +278,7 @@ function doRegExpAndShowResult(activeEditor: vscode.TextEditor, template: any)
 	if (quickPickItemsForMatchResults.length > 0)
 	{
 		vscode.window.showQuickPick(quickPickItemsForMatchResults, {
-			placeHolder: i18nText('select_result')
+			placeHolder: i18n(i18nTexts, 'select_result')
 		}).then(selection => {
 			if (selection !== undefined)
 			{
@@ -302,7 +303,7 @@ function doRegExpAndShowResult(activeEditor: vscode.TextEditor, template: any)
 	else
 	{
 		// マッチングしなかった場合はメッセージを表示
-		vscode.window.showWarningMessage(i18nText('no_match', template.label));
+		vscode.window.showWarningMessage(i18n(i18nTexts, 'no_match', { label: template.label }));
 	}
 }
 
@@ -341,7 +342,7 @@ export function activate(context: vscode.ExtensionContext)
 		const activeEditor = vscode.window.activeTextEditor;
 		if (!activeEditor)
 		{
-			vscode.window.showErrorMessage(i18nText('no_active_editor'));
+			vscode.window.showErrorMessage(i18n(i18nTexts, 'no_active_editor'));
 			return;
 		}
 
@@ -358,7 +359,7 @@ export function activate(context: vscode.ExtensionContext)
 		// テンプレートが一つもなかった場合、ディフォルト設定を設定に書き込んで使うか尋ねる
 		if (templates.length === 0)
 		{
-			vscode.window.showInformationMessage(i18nText('templatesNotFound'), i18nText('yes')).then(value =>
+			vscode.window.showInformationMessage(i18n(i18nTexts, 'templatesNotFound'), i18n(i18nTexts, 'yes')).then(value =>
 			{
 				if (value !== undefined)
 				{
@@ -366,7 +367,7 @@ export function activate(context: vscode.ExtensionContext)
 					vscode.workspace.getConfiguration(CONFIG_SECTION).update('templates', defaultTemplateList(), true);
 
 					// 書き込んだ旨表示
-					vscode.window.showInformationMessage(i18nText('defaultSettingsWritten'));
+					vscode.window.showInformationMessage(i18n(i18nTexts, 'defaultSettingsWritten'));
 				}
 			});
 		}
@@ -388,7 +389,7 @@ export function activate(context: vscode.ExtensionContext)
 				// 対応するテンプレートが見つからなかった場合、複数見つかった場合はQuickPickを表示して選んでもらう
 				if (theTemplates.length > 0)
 				{
-					placeHolderText = i18nText('multiple_template_found', ext, String(theTemplates.length));
+					placeHolderText = i18n(i18nTexts, 'multiple_template_found', { ext: ext, numMatches: String(theTemplates.length) });
 					templates.length = 0;
 					theTemplates.forEach(element => {
 						templates.push(element);
@@ -396,7 +397,7 @@ export function activate(context: vscode.ExtensionContext)
 				}
 				else
 				{
-					placeHolderText = i18nText('template_is_not_found', ext);
+					placeHolderText = i18n(i18nTexts, 'template_is_not_found', { ext: ext });
 				}
 
 				const searchTemplates_quickPickItems: Array<vscode.QuickPickItem> = [];

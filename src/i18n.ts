@@ -1,77 +1,123 @@
-const i18n =
+// 文字列リソースはja, enロケール必須とする
+interface RequiredLocales
 {
-	"select_result":
-	{
-		'en': "Select a result to jump.",
-		'ja': "ジャンプ先となる検索結果を選択して下さい。",
-	},
-	"no_match":
-	{
-		'en': "No match for {0} in this file.",
-		'ja': "このファイルに {0} にマッチする箇所はありませんでした。",
-	},
-	"no_active_editor":
-	{
-		'en': 'Please execute while a text editor is active.',
-		'ja': 'テキストエディタがアクティブな時に呼び出して下さい。',
-	},
-	"template_is_not_found":
-	{
-		'en': "Template for {0} is not found. Select one to execute.",
-		'ja': "拡張子 {0} に対応するテンプレートは見つかりませんでした。実行するテンプレートを選択して下さい。",
-	},
-	"multiple_template_found":
-	{
-		'en': "{0} matches {1} templates. Select one to execute.",
-		'ja': "拡張子 {0} に対応するテンプレートは {1} 個見つかりました。実行するテンプレートを選択して下さい。",
-	},
-	'templatesNotFound':
-	{
-		'en': 'No templates are found. Shall I put sample templates in the settings JSON?',
-		'ja': 'テンプレートが見つかりません。サンプルとなるテンプレート設定を書き込みますか？',
-	},
-	'yes':
-	{
-		'en': 'Yes',
-		'ja': 'はい'
-	},
-	'defaultSettingsWritten':
-	{
-		'ja': 'ディフォルト設定を書き込みました。もう一度実行して下さい。',
-		'en': 'Default settings are written. Please execute again.'
-	}
+	ja: string;
+	en: string;
+	[key: string]: string;
+}
+
+// プロジェクトごとの文字列リソースはこの型を使って定義のこと
+export type LocalizedMessages = Record<string, RequiredLocales>;
+
+// 文字列リソースの特定のキーが見つからない場合のエラーメッセージ
+const KEY_NOT_FOUND: RequiredLocales =
+{
+	ja: '文字列リソースのキー "{key}" が見付かりませんでした。',
+	en: 'Text resource key "{key}" not found.',
+	fr: 'Clé de ressource textuelle "{key}" non trouvée.',
+	'zh-cn': '未找到文本资源键 "{key}"。',
 };
 
-/**
- * 現在の言語設定に従って指定されたキーに対応するテキストを取得する。
- * @param key 取得するテキストのキー。
- * @param val テキストの中に任意の値を表示する場合はそれらを指定。省略可。
- * @returns キーに対応するテキストの文字列。
- */
-function i18nText(key: string, ...val: string[]): string
+// 特定の文字列に対応するロケールが見つからない場合のエラーメッセージ
+const EN_LOCALE_NOT_FOUND: RequiredLocales =
 {
-	const localeKey = <string>JSON.parse(<string>process.env.VSCODE_NLS_CONFIG).locale;
-	const text = i18n[key as keyof typeof i18n];
-	let s = text[localeKey as keyof typeof text];
+	ja: '文字列リソースのキー "{key}" にロケール en のテキストが見付かりませんでした。',
+	en: 'Text resource key "{key}" with locale en not found.',
+	fr: 'Clé de ressource textuelle "{key}" avec la locale en non trouvée.',
+	'zh-cn': '未找到带有英语区域设置的文本资源键 "{key}"。',
+};
 
-	// 見つからない場合は最初に書かれている言語を使う
-	if (s === undefined)
+
+
+
+
+
+
+
+
+
+/**
+ * 指定された文字列内のプレースホルダーを、与えられた辞書で置き換える。
+ * プレースホルダーは {キー名} として記述する。詳しくは例を参照。
+ *
+ * @param s プレースホルダーを含む元の文字列。
+ * @param values キーと値のペアを含む辞書。キーはプレースホルダーの名前、値は置換する文字列。
+ * @returns プレースホルダーを全て置換した新しい文字列。
+ *
+ * @example
+ * const template = "こんにちは、{name}さん！今日は{day}です。";
+ * const values = { name: "田中", day: "火曜日" };
+ * const result = replacePlaceholders(template, values);
+ * console.log(result); // "こんにちは、田中さん！今日は火曜日です。"
+ */
+function replacePlaceholders(s: string, values: Record<string, string>): string
+{
+	return Object.entries(values).reduce((result, [valueName, value]) =>
 	{
-		if (Object.keys(text).length > 0)
+		return result.replaceAll(`{${valueName}}`, value);
+	}, s);
+}
+
+
+
+
+
+
+
+
+
+
+/**
+ * 指定されたロケールに対応するメッセージを取得する。ロケールに対応するメッセージがない場合は英語(en)に対応するメッセージを返す。英語も存在しないなら最初のメッセージを返す。
+ * @param message ロケールキーとメッセージのペア。
+ * @param localeKey 取得したいメッセージのロケールキー。
+ * @returns ローカライズされたメッセージ。
+ */
+function getLocalizedMessage(message: Record<string, string>, localeKey: string, defaultValue: string): string
+{
+	return message[localeKey] || message['en'] || defaultValue;
+}
+
+
+
+
+
+
+
+
+
+
+/**
+ * 言語設定に対応する文字列を取得する。
+ *
+ * @param messages 国際化文字列を格納した、プロジェクトごとに異なるであろうオブジェクト。
+ * @param key i18nオブジェクト内の特定のキー。
+ * @param values プレースホルダーを置き換えるためのオブジェクト。キーがプレースホルダー名、値が置き換え文字列。
+ * @returns プレースホルダーが置き換えられたテキスト。
+ */
+function i18n(messages: LocalizedMessages, key: string, values: Record<string, string> = {}): string
+{
+	const localeKey = JSON.parse(<string>process.env.VSCODE_NLS_CONFIG).locale as string;
+	const text = messages[key as keyof typeof messages];
+	if (!text)
+	{
+		// 文字列リソースに対応するキーが見つからない
+		throw new Error(replacePlaceholders(getLocalizedMessage(KEY_NOT_FOUND, localeKey, KEY_NOT_FOUND['en']), { key: key }));
+	}
+	else
+	{
+		const localizedText = getLocalizedMessage(text, localeKey, '');
+
+		// enキーすら見つからない場合は必ずエラー
+		if (localizedText === '')
 		{
-			s = text[Object.keys(text)[0] as keyof typeof text];
+			throw new Error(replacePlaceholders(getLocalizedMessage(EN_LOCALE_NOT_FOUND, localeKey, EN_LOCALE_NOT_FOUND['en']), { key: key }));
 		}
 		else
 		{
-			s = '';
+			return replacePlaceholders(localizedText, values);
 		}
 	}
-
-	for (let i = 0; i < val.length; i++)
-	{
-		s = s.replace(`{${i}}`, val[i]);
-	}
-	return s;
 }
 
-export default i18nText;
+export default i18n;
