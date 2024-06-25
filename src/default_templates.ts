@@ -189,10 +189,18 @@ const default_templates =
 				"label_index": 1
 			},
 			{
-				// クラス名
-				"label": "$(symbol-method) $1",
-				"pattern": "^function (\\w+)\\(",
+				// インターフェース
+				"label": "$(symbol-interface) ${interface}",
+				"pattern": "^interface (?<interface>\\w+)",
 				"label_index": 1
+			},
+			{
+				// クラス名
+				"label": "$(symbol-class) ${className}",
+				"pattern": "(?:(?:(?:\\/\\*\\*\\n\\s\\*\\s)|(?:^\\/\\/\\s*))(?<description>[^\\n]+)\\n(?:(?:(?:^\\/\\/[^\\n]+)|(^(?:(?:\\s\\*\\s)|(?:\\s\\*\\/))[^\\n]*))\\n)*)?(abstract\\s)?class\\s(?<className>\\w+)",
+				"label_index": 1,
+				"flag": "gms",
+				"description": "${description}"
 			},
 			{
 				// クラスのメソッド
