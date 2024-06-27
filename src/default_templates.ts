@@ -178,6 +178,37 @@ const default_templates =
 		]
 	},
 	{
+		"label": "Markdown",
+		"extensions": [".md"],
+		"templates":
+		[
+			{
+				"label": "${title}",
+				"pattern" : "^(?<indent>[^\\S\\n\\r]*)#(?:\\s+)(?<title>.*)$",
+			},
+			{
+				"label": "    ${title}",
+				"pattern" : "^(?<indent>[^\\S\\n\\r]*)##(?:\\s+)(?<title>.*)$",
+			},
+			{
+				"label": "        ${title}",
+				"pattern" : "^(?<indent>[^\\S\\n\\r]*)###(?:\\s+)(?<title>.*)$",
+			},
+			{
+				"label": "            ${title}",
+				"pattern" : "^(?<indent>[^\\S\\n\\r]*)####(?:\\s+)(?<title>.*)$",
+			},
+			{
+				"label": "                ${title}",
+				"pattern" : "^(?<indent>[^\\S\\n\\r]*)#####(?:\\s+)(?<title>.*)$",
+			},
+			{
+				"label": "                    ${title}",
+				"pattern" : "^(?<indent>[^\\S\\n\\r]*)######(?:\\s+)(?<title>.*)$",
+			},
+		]
+	},
+	{
 		"label": "TypeScript",
 		"extensions": [".ts"],
 		"templates":

@@ -4,6 +4,11 @@
 
 [English is here](#english英語)
 
+### [0.1.?] - 2024-07-
+
+#### 追加
+- ディフォルトテンプレートにマークダウンファイル用の正規表現を追加。
+
 ### [0.1.2] - 2024-06-26
 
 #### 削除
@@ -70,6 +75,11 @@
 ## English(英語)
 
 [日本語(Japanese)はこちら](#日本語japanese)
+
+### [0.1.?] - 2024-07-
+
+#### Added
+- Added regular expressions for markdown file into the default template.
 
 ### [0.1.2] - 2024-06-26
 
