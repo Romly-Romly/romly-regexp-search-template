@@ -215,9 +215,10 @@ const default_templates =
 		[
 			{
 				// 関数
-				"label": "${indent}$(symbol-method) $2${test}",
-				"pattern": "^(?<indent>\\t*)(?<async>(?:async\\s+)?)function (?<test>\\w+)\\(",
-				"label_index": 1
+				"label": "${indent}$(symbol-method) ${funcName}",
+				"pattern": "(?:(?:(?:\\/\\*\\*(?:(?:\\r\\n)|\\r|\\n)\\s\\*\\s)|(?:^\\/\\/\\s*))(?<description>[^\\n\\r]+)(?:(?:\\r\\n)|\\r|\\n)(?:(?:(?:^\\/\\/[^\\n\\r]+)|(?:^(?:(?:\\s\\*\\s)|(?:\\s\\*\\/))[^\\n\\r]*))(?:(?:\\r\\n)|\\r|\\n))*)?^(?<indent>\\t*)(?<export>(?:export\\s+)?)(?<async>(?:async\\s+)?)function (?<funcName>\\w+)\\(",
+				"flag": "gms",
+				"description": "${description}"
 			},
 			{
 				// インターフェース
@@ -228,8 +229,7 @@ const default_templates =
 			{
 				// クラス名
 				"label": "$(symbol-class) ${className}",
-				"pattern": "(?:(?:(?:\\/\\*\\*\\n\\s\\*\\s)|(?:^\\/\\/\\s*))(?<description>[^\\n]+)\\n(?:(?:(?:^\\/\\/[^\\n]+)|(^(?:(?:\\s\\*\\s)|(?:\\s\\*\\/))[^\\n]*))\\n)*)?(abstract\\s)?class\\s(?<className>\\w+)",
-				"label_index": 1,
+				"pattern": "(?:(?:(?:\\/\\*\\*(?:(?:\\r\\n)|\\r|\\n)\\s\\*\\s)|(?:^\\/\\/\\s*))(?<description>[^\\n\\r]+)(?:(?:\\r\\n)|\\r|\\n)(?:(?:(?:^\\/\\/[^\\n]+)|(^(?:(?:\\s\\*\\s)|(?:\\s\\*\\/))[^\\n\\r]*))(?:(?:\\r\\n)|\\r|\\n))*)?(abstract\\s)?class\\s(?<className>\\w+)",
 				"flag": "gms",
 				"description": "${description}"
 			},
