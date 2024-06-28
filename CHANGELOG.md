@@ -4,10 +4,19 @@
 
 [English is here](#english英語)
 
-### [0.1.?] - 2024-07-
+### [0.2.1] - 2024-06-29
+
+#### 修正
+- 検索ボタンのキャプションが test になっていたのを修正。
+
+### [0.2.0] - 2024-06-29
 
 #### 追加
 - ディフォルトテンプレートにマークダウンファイル用の正規表現を追加。
+- 検索結果をファイル検索に渡す機能を追加。
+
+#### 変更
+- TypeScript用のディフォルトテンプレートで関数のコメントも取得するよう改良。
 
 ### [0.1.2] - 2024-06-26
 
@@ -76,10 +85,19 @@
 
 [日本語(Japanese)はこちら](#日本語japanese)
 
-### [0.1.?] - 2024-07-
+### [0.2.1] - 2024-06-29
+
+#### Fixed
+- Corrected the caption of the search button which was incorrectly set to "test".
+
+### [0.2.0] - 2024-06-29
 
 #### Added
-- Added regular expressions for markdown file into the default template.
+- Added regular expressions for markdown files to the default templates.
+- Added a feature to pass search results to the file search.
+
+#### Changed
+- Improved the default template for TypeScript to also capture function comments.
 
 ### [0.1.2] - 2024-06-26
 

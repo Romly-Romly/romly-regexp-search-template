@@ -32,11 +32,6 @@ const messages: LocalizedMessages =
 		en: 'No templates are found. Shall I put sample templates in the settings JSON?',
 		ja: 'テンプレートが見つかりません。サンプルとなるテンプレート設定を書き込みますか？',
 	},
-	'yes':
-	{
-		en: 'Yes',
-		ja: 'はい'
-	},
 	'defaultSettingsWritten':
 	{
 		ja: 'ディフォルト設定を書き込みました。もう一度実行して下さい。',

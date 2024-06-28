@@ -9,6 +9,32 @@ interface RequiredLocales
 // プロジェクトごとの文字列リソースはこの型を使って定義のこと
 export type LocalizedMessages = Record<string, RequiredLocales>;
 
+
+export const COMMON_TEXTS: LocalizedMessages =
+{
+	yes:
+	{
+		en: 'Yes',
+		ja: 'はい',
+		fr: 'Oui',
+		'zh-cn': '是'
+	},
+	search:
+	{
+		en: 'Search',
+		ja: '検索',
+		fr: 'Rechercher',
+		'zh-cn': '搜索'
+	},
+	showErrorDetailButtonCaption:
+	{
+		ja: '詳細を表示',
+		en: 'Show Detail',
+		fr: 'Afficher les détails',
+		'zh-cn': '显示详细信息'
+	}
+};
+
 // 文字列リソースの特定のキーが見つからない場合のエラーメッセージ
 const KEY_NOT_FOUND: RequiredLocales =
 {

@@ -22,10 +22,11 @@
 	* `templates`<br>このアイテムで実行する一つ以上の正規表現です。下記の3つの値を持つJSONオブジェクトの配列です。
 
 		* `name`
-		* `pattern`<br>実行する正規表現です。バックスラッシュ（`\`）を`\\`にエスケープする必要がことに注意して下さい。
-		* `flag`<br>正規表現のフラグ（gmsなど）を設定します。このプロパティを省略した場合、フラグには`gm`が指定されます。
-		* `label`<br>検索結果をコマンドパレットに表示する時のテキストです。`$0`～`$9`で正規表現のキャプチャ、`${group_name}`という形式で名前付きキャプチャ、またVS Codeで定義されているアイコン（`$(symbol-method)`など）も使えます。
-		* `description`<br>検索結果がコマンドパレットに表示される時にdescriptionとして右に表示されます。省略した場合は拡張機能全体の設定の Description Label 2 が使用されます。
+		* `pattern`<br>実行する正規表現です。バックスラッシュ（ `\` ）を `\\` にエスケープする必要がことに注意して下さい。
+		* `flag`<br>正規表現のフラグ（gmsなど）を設定します。このプロパティを省略した場合、フラグには `gm` が指定されます。
+		* `label`<br>検索結果をコマンドパレットに表示する時のテキストです。 `$0` ～ `$9` で正規表現のキャプチャ、 `${<group_name>}` という形式で名前付きキャプチャ、またVS Codeで定義されているアイコン（ `$(<symbol-method>)` など）も使えます。
+		* `description`<br>検索結果がコマンドパレットに表示される時にdescriptionとして右に表示されます。省略した場合は拡張機能全体の設定の "Description Label 2" が使用されます。<br>`{$0}` ～ `${9}` で正規表現のキャプチャ、 `${<group_name>}` で名前付きキャプチャ、 `${lineNumber}` で行番号を使えます。
+		* `searchText`<br>検索結果右に表示される検索ボタンをクリックした時にファイル検索に渡される検索テキストです。 `description` 同様の変数が使えます。省略した場合はマッチした全体が渡されます（ `${0}` と同等）。
 
 	記述例は [default_templates.ts](src/default_templates.ts) を参照して下さい。なお default_templates.ts の内容は、初回実行時など設定が見つからなかった場合に表示される確認で「はい」を選択すると初期設定として追加されます。
 
@@ -79,6 +80,8 @@ This extension gives you pre-defined regular expression search, shows the result
 		* `pattern`<br>The regular expression which will be executed. Note that backslashes (`\`) must be escaped as `\\`.
 		* `flag`<br>Specify the regular expression flags (e.g., `gms`). If this property is omitted, `gm` will be specified as the default flags.
 		* `label`<br>The text label when its result is shown in the command palette. You can use regular expression captures like `$0`..`$9` or named captures liek `${name}`. Also you can use icons that is defined by VS Code such as `$(symbol-method)`.
+		* `description`<br>This is displayed on the right as a description when search results appear in the command palette. If omitted, the "Description Label 2" from the extension settings is used. You can use `${0}` .. `${9}` for regex captures, `${<group_name>}` for named captures, and `${lineNumber}` for the line number.
+		* `searchText`<br>This is the search text passed to the file search when the search button displayed on the right of the search results is clicked. Variables similar to `description` can be used. If omitted, the entire matched text is passed (equivalent to `${0}`).
 
 	Please refer to [default_templates.ts](src/default_templates.ts) for an example. Note that the contents of templates_sample.json will be added as default settings if you select 'Yes' in the prompt displayed when settings are not found, such as during the initial execution.
 

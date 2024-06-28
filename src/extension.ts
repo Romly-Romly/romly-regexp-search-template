@@ -3,8 +3,10 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 
+import * as ryutils from './ryutils';
+
 // 自前の言語設定の読み込み
-import i18n from "./i18n";
+import * as i18n from "./i18n";
 import i18nTexts from "./i18nTexts";
 
 // ディフォルトテンプレート
@@ -40,6 +42,10 @@ class MyMatchRecord
 	index: number;
 	label: string;
 	lineNumber: number;
+
+	// 正規表現
+	pattern: string;
+
 	matchedTexts: Array<string> = [];
 
 	// 名前付きキャプチャのコピー
@@ -48,14 +54,17 @@ class MyMatchRecord
 	// QuickPickItem の description の上書き。
 	description: string | undefined = undefined;
 
+	private _searchText: string;
+
 	/**
 	 * コンストラクタ。
 	 * @param m マッチした正規表現の結果
 	 * @param aLabel ラベル
 	 * @param aLineNumber 行番号
 	 */
-	constructor(m: RegExpExecArray, aLabel: string, aLineNumber: number)
+	constructor(aPattern: string, m: RegExpExecArray, aLabel: string, aLineNumber: number, aSearchText: string)
 	{
+		this.pattern = aPattern;
 		this.index = m.index;
 		m.forEach(element => {
 			this.matchedTexts.push(element);
@@ -71,6 +80,9 @@ class MyMatchRecord
 				this.namedCaptures.set(name, value);
 			}
 		}
+
+		// 検索ボタンをクリックした時に検索する文字列
+		this._searchText = aSearchText !== '' ? this.replaceVariables(aSearchText) : m[0];
 	}
 
 	/**
@@ -90,7 +102,131 @@ class MyMatchRecord
 	{
 		records.sort((a, b) => a.index - b.index);
 	}
+
+	replaceVariables(s: string): string
+	{
+		// 数字（${0}～${9}）を置き換える
+		for (let i = 0; i <= 9; i++)
+		{
+			if (this.matchedTexts[i] !== undefined)
+			{
+				s = s.replaceAll('${' + i.toString() + '}', flattenTabs(this.matchedTexts[i]));
+			}
+		}
+
+		// 行番号
+		s = s.replaceAll('${lineNumber}', this.lineNumber.toString());
+
+		// 名前付きキャプチャの置き換え
+		for (const [name, value] of this.namedCaptures)
+		{
+			if (value !== undefined)
+			{
+				s = s.replaceAll('${' + name + '}', flattenTabs(value));
+			}
+		}
+
+		return s;
+	}
+
+	get searchText(): string
+	{
+		return this._searchText;
+	}
 }
+
+
+
+
+
+
+
+
+
+
+/**
+ * マッチした項目を表す QuickPickItem
+ */
+class MyMatchResultQuickPickItem implements vscode.QuickPickItem
+{
+	private readonly BUTTON_ID_SEARCH = 'search';
+
+	readonly label: string;
+	readonly description: string;
+	buttons: ryutils.RyQuickPickButton[];
+
+	matchResult: MyMatchRecord;
+
+	constructor(matchResult: MyMatchRecord)
+	{
+		this.matchResult = matchResult;
+		this.label = matchResult.label;
+
+		// matchResult.description があればそちらを優先
+		if (matchResult.description)
+		{
+			this.description = matchResult.description;
+		}
+		else
+		{
+			// descriptionLabel2 の設定に従って description 用の文字列を作る。
+			const descriptionLabel = vscode.workspace.getConfiguration(CONFIG_SECTION).get(CONFIG_KEY_DESCRIPTION_LABEL) as string;
+			this.description = matchResult.replaceVariables(descriptionLabel);
+		}
+
+		this.buttons = [{ iconPath: new vscode.ThemeIcon('search'), tooltip: i18n.default(i18n.COMMON_TEXTS, 'search'), id: this.BUTTON_ID_SEARCH }];
+	}
+
+	onSelect(): void
+	{
+		const activeEditor = vscode.window.activeTextEditor;
+		if (activeEditor)
+		{
+			const selectedResult = this.matchResult;
+
+			// 設定を読み込む
+			const selectMatch = vscode.workspace.getConfiguration(CONFIG_SECTION).get('selectMatch');
+
+			// カーソルを移動
+			const pos = activeEditor.document.positionAt(selectedResult.index);
+			const posEnd = activeEditor.document.positionAt(selectedResult.index + selectedResult.matchText().length);
+			//const pos = new vscode.Position(selectedResult.index, selectedResult.index);
+			activeEditor.selection = selectMatch ? new vscode.Selection(pos, posEnd) : new vscode.Selection(pos, pos);
+
+			// selectionだけ変えてもスクロールしないので、表示する必要がある。
+			activeEditor.revealRange(new vscode.Range(activeEditor.selection.start, activeEditor.selection.end), vscode.TextEditorRevealType.InCenterIfOutsideViewport);
+		}
+	}
+
+	onButtonClick(button: ryutils.RyQuickPickButton): void
+	{
+		if (button.id === this.BUTTON_ID_SEARCH)
+		{
+			const findInFilesArgs =
+			{
+				query: this.matchResult.searchText,
+				// replace?: string;
+				// triggerSearch?: boolean;
+				// filesToInclude?: string;
+				// filesToExclude?: string;
+				isRegex: false,
+				// isCaseSensitive?: boolean;
+				// matchWholeWord?: boolean;
+			};
+			// 検索ビューを開く
+			vscode.commands.executeCommand('workbench.action.findInFiles', findInFilesArgs).then(() =>
+			{
+				// 検索結果をエディターで開く
+				// vscode.commands.executeCommand('search.action.openInEditor');
+			});
+		}
+	}
+}
+
+
+
+
+
 
 
 
@@ -171,47 +307,6 @@ function replaceWithMatchedTexts(text: string, m: RegExpExecArray): string
 
 
 /**
- * descriptionLabel2 の設定に従って description 用の文字列を作る。
- * @param matchedResult
- * @returns
- */
-function makeDescription(matchedResult: MyMatchRecord): string
-{
-	const descriptionLabel = vscode.workspace.getConfiguration(CONFIG_SECTION).get(CONFIG_KEY_DESCRIPTION_LABEL) as string;
-
-	let s = descriptionLabel;
-
-	// 数字（${0}～${9}）を置き換える
-	for (let i = 0; i <= 9; i++)
-	{
-		if (matchedResult.matchedTexts[i] !== undefined)
-		{
-			s = s.replaceAll('${' + i.toString() + '}', flattenTabs(matchedResult.matchedTexts[i]));
-		}
-	}
-
-	// 行番号
-	s = s.replaceAll('${lineNumber}', matchedResult.lineNumber.toString());
-
-	// 名前付きキャプチャの置き換え
-	for (const [name, value] of matchedResult.namedCaptures)
-	{
-		s = s.replaceAll('${' + name + '}', flattenTabs(value));
-	}
-
-	return s;
-}
-
-
-
-
-
-
-
-
-
-
-/**
  * アクティブなテキストエディターに対して複数の正規表現での検索をまとめて実行し、結果をQuickPickで表示する。
  * @param activeEditor アクティブなテキストエディター
  * @param template 正規表現テンプレート
@@ -225,8 +320,7 @@ function doRegExpAndShowResult(activeEditor: vscode.TextEditor, template: any)
 	const showLineNumber = vscode.workspace.getConfiguration(CONFIG_SECTION).get(CONFIG_KEY_SHOW_LINENUMBER);
 
 	// 正規表現でマッチング
-	const quickPickItemsForMatchResults: Array<vscode.QuickPickItem> = [];
-	const matchResults: Array<MyMatchRecord> = [];
+	const matchResults: MyMatchRecord[] = [];
 	template.templates.forEach((element: any) =>
 	{
 		// element に flag プロパティがある場合はそちらを優先
@@ -244,7 +338,7 @@ function doRegExpAndShowResult(activeEditor: vscode.TextEditor, template: any)
 			}
 
 			label += replaceWithMatchedTexts(element.label, m);
-			const matchResult = new MyMatchRecord(m, label, line);
+			const matchResult = new MyMatchRecord(re.source, m, label, line, element.searchText || '');
 
 			if (element.hasOwnProperty('description'))
 			{
@@ -258,45 +352,42 @@ function doRegExpAndShowResult(activeEditor: vscode.TextEditor, template: any)
 	// 検索結果を行番号順に並び替える
 	MyMatchRecord.sort(matchResults);
 
+	const quickPickItemsForMatchResults: MyMatchResultQuickPickItem[] = [];
 	matchResults.forEach(matchResult =>
 	{
-		const item = {
-			label: matchResult.label,
-			// matchResult.description があればそちらを優先
-			description: matchResult.description ?? makeDescription(matchResult)
-		}
+		const item = new MyMatchResultQuickPickItem(matchResult);
 		quickPickItemsForMatchResults.push(item);
 	});
 
 	if (quickPickItemsForMatchResults.length > 0)
 	{
-		vscode.window.showQuickPick(quickPickItemsForMatchResults, {
-			placeHolder: i18n(i18nTexts, 'select_result')
-		}).then(selection => {
-			if (selection !== undefined)
+		const quickPick = vscode.window.createQuickPick();
+		quickPick.items = quickPickItemsForMatchResults;
+		quickPick.placeholder = i18n.default(i18nTexts, 'select_result');
+		quickPick.onDidAccept(() =>
+		{
+			const selection = quickPick.selectedItems[0];
+			if (selection instanceof MyMatchResultQuickPickItem)
 			{
-				// 選択した項目を取得
-				let index: number = quickPickItemsForMatchResults.indexOf(selection);
-				const selectedResult = matchResults[index];
-
-				// 設定を読み込む
-				const selectMatch = vscode.workspace.getConfiguration(CONFIG_SECTION).get('selectMatch');
-
-				// カーソルを移動
-				const pos = activeEditor.document.positionAt(selectedResult.index);
-				const posEnd = activeEditor.document.positionAt(selectedResult.index + selectedResult.matchText().length);
-				//const pos = new vscode.Position(selectedResult.index, selectedResult.index);
-				activeEditor.selection = selectMatch ? new vscode.Selection(pos, posEnd) : new vscode.Selection(pos, pos);
-
-				// selectionだけ変えてもスクロールしないので、表示する必要がある。
-				activeEditor.revealRange(new vscode.Range(activeEditor.selection.start, activeEditor.selection.end), vscode.TextEditorRevealType.InCenterIfOutsideViewport);
+				selection.onSelect();
+				quickPick.dispose();
 			}
 		});
+		quickPick.onDidTriggerItemButton((e) =>
+		{
+			if (e.item instanceof MyMatchResultQuickPickItem)
+			{
+				const button = e.button as ryutils.RyQuickPickButton;
+				e.item.onButtonClick(button);
+				quickPick.dispose();
+			}
+		});
+		quickPick.show();
 	}
 	else
 	{
 		// マッチングしなかった場合はメッセージを表示
-		vscode.window.showWarningMessage(i18n(i18nTexts, 'no_match', { label: template.label }));
+		vscode.window.showWarningMessage(i18n.default(i18nTexts, 'no_match', { label: template.label }));
 	}
 }
 
@@ -335,7 +426,7 @@ export function activate(context: vscode.ExtensionContext)
 		const activeEditor = vscode.window.activeTextEditor;
 		if (!activeEditor)
 		{
-			vscode.window.showErrorMessage(i18n(i18nTexts, 'no_active_editor'));
+			vscode.window.showErrorMessage(i18n.default(i18nTexts, 'no_active_editor'));
 			return;
 		}
 
@@ -352,7 +443,7 @@ export function activate(context: vscode.ExtensionContext)
 		// テンプレートが一つもなかった場合、ディフォルト設定を設定に書き込んで使うか尋ねる
 		if (templates.length === 0)
 		{
-			vscode.window.showInformationMessage(i18n(i18nTexts, 'templatesNotFound'), i18n(i18nTexts, 'yes')).then(value =>
+			vscode.window.showInformationMessage(i18n.default(i18nTexts, 'templatesNotFound'), i18n.default(i18n.COMMON_TEXTS, 'yes')).then(value =>
 			{
 				if (value !== undefined)
 				{
@@ -360,7 +451,7 @@ export function activate(context: vscode.ExtensionContext)
 					vscode.workspace.getConfiguration(CONFIG_SECTION).update('templates', defaultTemplateList(), true);
 
 					// 書き込んだ旨表示
-					vscode.window.showInformationMessage(i18n(i18nTexts, 'defaultSettingsWritten'));
+					vscode.window.showInformationMessage(i18n.default(i18nTexts, 'defaultSettingsWritten'));
 				}
 			});
 		}
@@ -378,11 +469,11 @@ export function activate(context: vscode.ExtensionContext)
 			}
 			else
 			{
-				var placeHolderText: string;
+				let placeHolderText: string;
 				// 対応するテンプレートが見つからなかった場合、複数見つかった場合はQuickPickを表示して選んでもらう
 				if (theTemplates.length > 0)
 				{
-					placeHolderText = i18n(i18nTexts, 'multiple_template_found', { ext: ext, numMatches: String(theTemplates.length) });
+					placeHolderText = i18n.default(i18nTexts, 'multiple_template_found', { ext: ext, numMatches: String(theTemplates.length) });
 					templates.length = 0;
 					theTemplates.forEach(element => {
 						templates.push(element);
@@ -390,7 +481,7 @@ export function activate(context: vscode.ExtensionContext)
 				}
 				else
 				{
-					placeHolderText = i18n(i18nTexts, 'template_is_not_found', { ext: ext });
+					placeHolderText = i18n.default(i18nTexts, 'template_is_not_found', { ext: ext });
 				}
 
 				const searchTemplates_quickPickItems: Array<vscode.QuickPickItem> = [];

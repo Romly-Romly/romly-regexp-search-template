@@ -2,7 +2,7 @@
 	"name": "romly-regexp-search-template",
 	"displayName": "Romly RegExp Search Template",
 	"description": "This extension gives you quick predefined regular expression search from the command palette. 予め定義しておいた正規表現検索をコマンドパレットから素早く実行できる拡張機能です。",
-	"version": "0.1.2",
+	"version": "0.2.1",
 	"publisher": "Romly",
 	"repository": {
 		"type": "git",
