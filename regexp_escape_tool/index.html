@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>正規表現エスケープツール</title>
+	<style>
+		*
+		{
+			margin: 0;
+			padding: 0;
+		}
+
+		h1, h2
+		{
+			font-size: 100%;
+		}
+
+		body
+		{
+			font-size: 1.0rem;
+			padding: 1rem;
+		}
+
+		h1
+		{
+			font-size: 200%;
+		}
+
+		h2
+		{
+			font-size: 150%;
+		}
+
+		p:not(:last-child)
+		{
+			margin-block-end: 1rem;
+		}
+
+		textarea
+		{
+			width: 100%;
+			height: 6rem;
+			font-family: monospace;
+			font-size: 200%;
+			white-space: pre;
+		}
+
+		button
+		{
+			padding-left: .5rem;
+			padding-inline: 2rem;
+			font-size: 150%;
+		}
+	</style>
+</head>
+<body>
+	<h1>Romly RegExp Search Template<br>正規表現エスケープツール</h1>
+
+	<p>
+		正規表現をJSONに記述するためにエスケープ、またはその逆を行います。<code>\</code>（バックスラッシュ）を<code>\\</code>に、<code>"</code>（二重引用符）を<code>\"</code>に置き換えます。
+	</p>
+
+	<h2>生の正規表現</h2>
+	<p>
+		<textarea id="raw_regexp" oninput="escapeString('raw_regexp', 'escaped_regexp')"></textarea>
+		<button onclick="copyTextArea('raw_regexp')">コピー</button>
+	</p>
+
+	<h2>JSON用にエスケープした正規表現</h2>
+	<p>
+		<textarea id="escaped_regexp" oninput="unescapeString('escaped_regexp', 'raw_regexp')"></textarea>
+		<button onclick="copyTextArea('escaped_regexp')">コピー</button>
+	</p>
+
+	<p>
+		Marketplace: <a href="https://marketplace.visualstudio.com/items?itemName=Romly.romly-regexp-search-template" target="_blank">Romly RegExp Search Template - Visual Studio Marketplace</a><br>
+		Github: <a href="https://github.com/Romly-Romly/romly-regexp-search-template" target="_blank">Romly-Romly/romly-regexp-search-template</a><br>
+		Blog: <a href="https://romly.com/blog/" target="_blank">Romly.com</a>
+	</p>
+
+	<p>
+		(C)2024 Romly
+	</p>
+
+	<script src="script.js"></script>
+</body>
+</html>
