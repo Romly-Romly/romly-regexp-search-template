@@ -2,31 +2,31 @@ const default_templates =
 [
 	{
 		"label": "C#",
+		"extensions": [".cs"],
 		"templates":
 		[
 			{
 				"name": "C# class name",
 				"label": "$(symbol-class) $1",
-				"pattern" : "^\\s*(?:private|public)\\sclass\\s([\\w]+)\\s\\:",
-				"label_index" : 1
+				"pattern": "^\\s*(?:private|public)\\sclass\\s([\\w]+)\\s\\:",
+				"label_index": 1
 			},
 			{
 				"name": "C# default method",
 				"label": "    $(symbol-method) $1$3",
-				"pattern" : "^\\s*(private\\s|public\\s|)([\\w]+)\\s([\\w]+)\\(",
-				"label_index" : 3
+				"pattern": "^\\s*(private\\s|public\\s|)([\\w]+)\\s([\\w]+)\\(",
+				"label_index": 3
 			},
 			{
 				"name": "C# public property",
 				"label": "    $(symbol-field) public $2",
-				"pattern" : "^\\s*public\\s([\\w]+)\\s([\\w]+)$",
-				"label_index" : 2
+				"pattern": "^\\s*public\\s([\\w]+)\\s([\\w]+)$",
+				"label_index": 2
 			}
-		],
-		"extensions": [".cs"]
+		]
 	},
 	{
-		"label": 'Delphi',
+		"label": "Delphi",
 		"extensions": [".pas"],
 		"templates":
 		[
@@ -63,7 +63,7 @@ const default_templates =
 		]
 	},
 	{
-		"label": 'Python',
+		"label": "Python",
 		"extensions": [".py"],
 		"templates":
 		[
@@ -82,7 +82,7 @@ const default_templates =
 		]
 	},
 	{
-		"label": 'Python const',
+		"label": "Python const",
 		"extensions": [".py"],
 		"templates":
 		[
@@ -109,7 +109,7 @@ const default_templates =
 		]
 	},
 	{
-		"label": 'Processing',
+		"label": "Processing",
 		"extensions": [".pde"],
 		"templates":
 		{
@@ -145,8 +145,20 @@ const default_templates =
 			},
 			{
 				"label": "前方宣言 $1",
-				"pattern" : "^\\w+\\s\\*?(\\w+)\\(.+\\;$",
-				"label_index" : 1
+				"pattern": "^\\w+\\s\\*?(\\w+)\\(.+\\;$",
+				"label_index": 1
+			}
+		]
+	},
+	{
+		"label": "C",
+		"extensions": [".c"],
+		"templates":
+		[
+			{
+				"label": "$(symbol-method) ${funcName}",
+				"pattern": "^(?<static>static\\s|)(?<inline>inline\\s|)\\w+\\s\\*?(?<funcName>\\w+)\\(.*$",
+				"label_index": 2
 			}
 		]
 	},
@@ -157,23 +169,23 @@ const default_templates =
 		[
 			{
 				"label": "$1",
-				"pattern" : "<h1[^>]*>(.*)<\\/h1>",
-				"label_index" : 1
+				"pattern": "<h1[^>]*>(.*)<\\/h1>",
+				"label_index": 1
 			},
 			{
 				"label": "    $1",
-				"pattern" : "<h2[^>]*>(.*)<\\/h2>",
-				"label_index" : 1
+				"pattern": "<h2[^>]*>(.*)<\\/h2>",
+				"label_index": 1
 			},
 			{
 				"label": "        $1",
-				"pattern" : "<h3[^>]*>(.*)<\\/h3>",
-				"label_index" : 1
+				"pattern": "<h3[^>]*>(.*)<\\/h3>",
+				"label_index": 1
 			},
 			{
 				"label": "            $1",
-				"pattern" : "<h4[^>]*>(.*)<\\/h4>",
-				"label_index" : 1
+				"pattern": "<h4[^>]*>(.*)<\\/h4>",
+				"label_index": 1
 			}
 		]
 	},
@@ -223,7 +235,7 @@ const default_templates =
 			{
 				// インターフェース
 				"label": "$(symbol-interface) ${interface}",
-				"pattern": "^interface (?<interface>\\w+)",
+				"pattern": "^(?:export\\s+)?interface (?<interface>\\w+)",
 				"label_index": 1
 			},
 			{
@@ -231,7 +243,8 @@ const default_templates =
 				"label": "$(symbol-class) ${className}",
 				"pattern": "(?:(?:(?:\\/\\*\\*(?:(?:\\r\\n)|\\r|\\n)\\s\\*\\s)|(?:^\\/\\/\\s*))(?<description>[^\\n\\r]+)(?:(?:\\r\\n)|\\r|\\n)(?:(?:(?:^\\/\\/[^\\n]+)|(^(?:(?:\\s\\*\\s)|(?:\\s\\*\\/))[^\\n\\r]*))(?:(?:\\r\\n)|\\r|\\n))*)?(abstract\\s)?class\\s(?<className>\\w+)",
 				"flag": "gms",
-				"description": "${description}"
+				"description": "${description}",
+				"searchText": "${className}"
 			},
 			{
 				// クラスのメソッド
@@ -239,7 +252,7 @@ const default_templates =
 				"pattern": "^(\\t*)(public|private) (\\w+)\\(",
 				"label_index": 1
 			}
-		],
+		]
 	},
 	{
 		"label": "CSS",
@@ -261,7 +274,7 @@ const default_templates =
 				"pattern": "@mixin\\s+(\\w+)\\(.*\\)",
 				"label_index": 0
 			}
-		],
+		]
 	}
 ];
 

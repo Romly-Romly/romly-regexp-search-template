@@ -5,10 +5,6 @@ import * as path from 'path';
 
 import * as ryutils from './ryutils';
 
-// 自前の言語設定の読み込み
-import * as i18n from "./i18n";
-import i18nTexts from "./i18nTexts";
-
 // ディフォルトテンプレート
 import default_templates from "./default_templates";
 
@@ -174,7 +170,7 @@ class MyMatchResultQuickPickItem implements vscode.QuickPickItem
 			this.description = matchResult.replaceVariables(descriptionLabel);
 		}
 
-		this.buttons = [{ iconPath: new vscode.ThemeIcon('search'), tooltip: i18n.default(i18n.COMMON_TEXTS, 'search'), id: this.BUTTON_ID_SEARCH }];
+		this.buttons = [{ iconPath: new vscode.ThemeIcon('search'), tooltip: vscode.l10n.t("search"), id: this.BUTTON_ID_SEARCH }];
 	}
 
 	onSelect(): void
@@ -363,7 +359,7 @@ function doRegExpAndShowResult(activeEditor: vscode.TextEditor, template: any)
 	{
 		const quickPick = vscode.window.createQuickPick();
 		quickPick.items = quickPickItemsForMatchResults;
-		quickPick.placeholder = i18n.default(i18nTexts, 'select_result');
+		quickPick.placeholder = vscode.l10n.t("Select a result to jump.");
 		quickPick.onDidAccept(() =>
 		{
 			const selection = quickPick.selectedItems[0];
@@ -387,7 +383,8 @@ function doRegExpAndShowResult(activeEditor: vscode.TextEditor, template: any)
 	else
 	{
 		// マッチングしなかった場合はメッセージを表示
-		vscode.window.showWarningMessage(i18n.default(i18nTexts, 'no_match', { label: template.label }));
+		const msg = vscode.l10n.t("No match for {label} in this file.", { label: template.label });
+		vscode.window.showWarningMessage(msg);
 	}
 }
 
@@ -426,7 +423,8 @@ export function activate(context: vscode.ExtensionContext)
 		const activeEditor = vscode.window.activeTextEditor;
 		if (!activeEditor)
 		{
-			vscode.window.showErrorMessage(i18n.default(i18nTexts, 'no_active_editor'));
+			const msg = vscode.l10n.t("Please execute while a text editor is active.");
+			vscode.window.showErrorMessage(msg);
 			return;
 		}
 
@@ -443,7 +441,8 @@ export function activate(context: vscode.ExtensionContext)
 		// テンプレートが一つもなかった場合、ディフォルト設定を設定に書き込んで使うか尋ねる
 		if (templates.length === 0)
 		{
-			vscode.window.showInformationMessage(i18n.default(i18nTexts, 'templatesNotFound'), i18n.default(i18n.COMMON_TEXTS, 'yes')).then(value =>
+			const msg = vscode.l10n.t("No templates are found. Shall I put sample templates in the settings JSON?");
+			vscode.window.showInformationMessage(msg, vscode.l10n.t("Yes")).then(value =>
 			{
 				if (value !== undefined)
 				{
@@ -451,7 +450,8 @@ export function activate(context: vscode.ExtensionContext)
 					vscode.workspace.getConfiguration(CONFIG_SECTION).update('templates', defaultTemplateList(), true);
 
 					// 書き込んだ旨表示
-					vscode.window.showInformationMessage(i18n.default(i18nTexts, 'defaultSettingsWritten'));
+					const msg = vscode.l10n.t("Default settings were written. Please execute the command again.");
+					vscode.window.showInformationMessage(msg);
 				}
 			});
 		}
@@ -473,7 +473,7 @@ export function activate(context: vscode.ExtensionContext)
 				// 対応するテンプレートが見つからなかった場合、複数見つかった場合はQuickPickを表示して選んでもらう
 				if (theTemplates.length > 0)
 				{
-					placeHolderText = i18n.default(i18nTexts, 'multiple_template_found', { ext: ext, numMatches: String(theTemplates.length) });
+					placeHolderText = vscode.l10n.t("{ext} matches {numMatches} templates. Select one to execute.", { ext: ext, numMatches: String(theTemplates.length) });
 					templates.length = 0;
 					theTemplates.forEach(element => {
 						templates.push(element);
@@ -481,7 +481,7 @@ export function activate(context: vscode.ExtensionContext)
 				}
 				else
 				{
-					placeHolderText = i18n.default(i18nTexts, 'template_is_not_found', { ext: ext });
+					placeHolderText = vscode.l10n.t("Template for {ext} is not found. Select one to execute.", { ext: ext });
 				}
 
 				const searchTemplates_quickPickItems: Array<vscode.QuickPickItem> = [];

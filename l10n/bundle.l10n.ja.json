@@ -1,0 +1,12 @@
+{
+	"Yes": "はい",
+	"Search": "検索",
+	"Show Detail": "詳細を表示",
+	"Select a result to jump.": "ジャンプ先となる検索結果を選択して下さい。",
+	"No match for {label} in this file.": "このファイルに {label} にマッチする箇所はありませんでした。",
+	"Please execute while a text editor is active.": "キストエディタがアクティブな時に呼び出して下さい。",
+	"No templates are found. Shall I put sample templates in the settings JSON?": "テンプレートが見つかりません。サンプルとなるテンプレート設定を書き込みますか？",
+	"Default settings were written. Please execute the command again.": "ディフォルト設定を書き込みました。もう一度実行して下さい。",
+	"Template for {ext} is not found. Select one to execute.": "拡張子 {ext} に対応するテンプレートは見つかりませんでした。実行するテンプレートを選択して下さい。",
+	"{ext} matches {numMatches} templates. Select one to execute.": "拡張子 {ext} に対応するテンプレートは {numMatches} 個見つかりました。実行するテンプレートを選択して下さい。"
+}

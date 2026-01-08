@@ -2,9 +2,6 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import { exec } from 'child_process';
 
-// 自前の言語設定の読み込み
-import * as i18n from "./i18n";
-
 
 
 
@@ -133,9 +130,16 @@ export interface RyQuickPickButton extends vscode.QuickInputButton
 
 
 
+/**
+ * エラーを `vscode.window.showErrorMessage` で表示し、ユーザーの要求に応じて詳細を表示する。
+ * @param errorMessage `vscode.window.showErrorMessage` で表示するエラーメッセージ。
+ * @param extensionName 詳細を表示する時に出力チャンネルを識別するための拡張機能の名前。 `createOutputChannel` で使用する。
+ * @param debugErrorMessage 出力チャンネルに最初に表示するエラーメッセージ。
+ * @param error 出力チャンネルに表示する Error オブジェクト。
+ */
 export function showErrorMessageWithDetailChannel(errorMessage: string, extensionName: string, debugErrorMessage: string, error: Error)
 {
-	vscode.window.showErrorMessage(errorMessage, i18n.default(i18n.COMMON_TEXTS, 'showErrorDetailButtonCaption')).then(() =>
+	vscode.window.showErrorMessage(errorMessage, vscode.l10n.t("Show Detail")).then(() =>
 	{
 		// エラー詳細を Output Channel に表示
 		const channel = vscode.window.createOutputChannel(extensionName);

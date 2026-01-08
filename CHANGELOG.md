@@ -4,6 +4,11 @@
 
 [English is here](#english英語)
 
+### [0.2.2] - 2026-01-08
+
+- ディフォルトテンプレートに.cファイル用の正規表現を追加。
+- ライセンスをMPL2.0に変更
+
 ### [0.2.1] - 2024-06-29
 
 #### 修正
@@ -84,6 +89,11 @@
 ## English(英語)
 
 [日本語(Japanese)はこちら](#日本語japanese)
+
+### [0.2.2] - 2026-01-08
+
+- Added regular expressions for .c file to the default templates.
+- Changed license to MPL2.0
 
 ### [0.2.1] - 2024-06-29
 
